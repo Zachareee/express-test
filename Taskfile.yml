@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  dev:
+    desc: Run the server in development mode
+    cmds:
+      - deno task dev
+    silent: true
+
+  migrate:
+    desc: Run db migrations
+    cmds:
+      - deno x drizzle-kit push
+    silent: true
+
+  seed:
+    desc: Seed the db
+    cmds:
+      - deno run -A seed.ts

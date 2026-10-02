@@ -1,0 +1,42 @@
+@host = http://localhost:3000
+
+###
+# @name scratchpad
+GET {{host}} HTTP/1.1
+accept: application/json
+content-type: application/json
+
+###
+GET {{host}}/authedUsers HTTP/1.1
+accept: application/json
+content-type: application/json
+
+### unauthenticated
+# @kulala-expect-status-code 401
+GET {{host}}/protected HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: hello:byebye
+
+### unauthorised
+# @kulala-expect-status-code 403
+GET {{host}}/protected HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: devania:lovescats
+
+### ADMIN
+GET {{host}}/protected HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: denise:pianogod
+
+### create user
+POST {{host}}/user HTTP/1.1
+Content-Type: application/json
+authorization: zachary:password
+
+{
+  "name": "denise",
+  "password": "pianogod"
+}
