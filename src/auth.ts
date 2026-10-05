@@ -14,11 +14,10 @@ export type AuthedRequest = Request & AuthAdditions
 export function requireRole(role: typeof usersTable.$inferInsert.role): RequestHandler {
   return async (req: UnauthedRequest, _res, next) => {
     const auth = req.headers["authorization"];
-    const [user, pw] = auth.split(":");
+    const [user, pw] = (auth ?? "").split(":");
 
     const record = await getUserByName(user);
-
-    if (record && verify(record.hash, pw || "")) {
+    if (record && await verify(record.hash, pw || "")) {
       req.id = user
       if (role !== record.role) next(new ClientError(`${user} is forbidden from accessing this resource`, 403))
       else next()

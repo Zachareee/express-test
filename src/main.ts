@@ -11,17 +11,28 @@ app.get("/", (_req, res) => {
   res.send("Hello");
 })
 
-app.post("/echo", (req, res) => {
-  const { body } = req
+app.post("/echo", ({ body }, res) => {
   res.send({ body })
 })
 
-app.get("/authedUsers", async (_req, res) => {
-  res.send(await userService.getAllUsers())
+app.get("/authedUsers", (_req, res) =>
+  userService.getAllUsers().then(users => res.send(users))
+)
+
+app.get("/groupedUsers", (_req, res) => {
+  userService.groupUsersByRoles().then(res.send.bind(res))
 })
 
 app.get("/protected", requireRole("ADMIN"), (req: AuthedRequest, res) => {
-  res.send(`Welcome back, ${req.id}`)
+  res.send(`Welcome back admin, ${req.id}`)
+})
+
+app.post("/login", requireRole("USER"), (req: AuthedRequest, res) => {
+  res.format({
+    json() {
+      return res.send({ message: `You are logged in, ${req.id}` })
+    }
+  })
 })
 
 app.post("/user", requireRole("ADMIN"), async (req: AuthedRequest, res) => {
@@ -33,15 +44,19 @@ app.post("/user", requireRole("ADMIN"), async (req: AuthedRequest, res) => {
 })
 
 app.use((_req, res) => {
-  res.status(404).send("Not found")
+  res.sendStatus(404)
 })
 
 const errorHandler: ErrorRequestHandler = (err: ClientError, _req, res, _next) => {
+  console.dir(err)
   res.status(err.statusCode ?? 500).send(err.message)
 }
 
 app.use(errorHandler)
 
-app.listen(3000, () => {
+app.listen({ port: 3000, hostname: "0.0.0.0" }, (e) => {
+  if (e) {
+    throw e
+  }
   console.log("Listening on port 3000")
 })

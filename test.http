@@ -1,6 +1,10 @@
 @host = http://localhost:3000
 
 ###
+GET {{host}}/hi HTTP/1.1
+accept: application/json
+
+###
 # @name scratchpad
 GET {{host}} HTTP/1.1
 accept: application/json
@@ -29,7 +33,16 @@ authorization: devania:lovescats
 GET {{host}}/protected HTTP/1.1
 accept: application/json
 content-type: application/json
-authorization: denise:pianogod
+authorization: zachary:password
+
+###
+GET {{host}}/groupedUsers
+
+### login
+POST {{host}}/login HTTP/1.1
+accept: application/json
+Content-Type: application/json
+authorization: devania:lovescats
 
 ### create user
 POST {{host}}/user HTTP/1.1

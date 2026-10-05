@@ -13,7 +13,8 @@
   "dependencies": {
     "@felix/argon2": "npm:@jsr/felix__argon2@^3.1.0",
     "@libsql/client": "^0.18.0",
-    "dotenv": "^18.0.4",
+    "@types/lodash": "^4.17.25",
+    "dotenv": "^18.0.5",
     "drizzle-orm": "1.0.0-rc.4",
     "express": "^5.2.1",
     "lodash": "^4.18.1",

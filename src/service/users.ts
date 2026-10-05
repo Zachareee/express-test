@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import * as z from "zod"
+import _ from "lodash"
 import { hash } from "@felix/argon2";
 
 import { db } from "../db";
@@ -10,8 +11,16 @@ export const createUserSchema = z.object({
   password: z.string().nonempty()
 })
 
+const getName = _.unary(_.partialRight(_.map, "name"))
+
 export async function getAllUsers() {
-  return db.select({ name: usersTable.name }).from(usersTable).then(users => users.map(({ name }) => name))
+  return db.select({ name: usersTable.name }).from(usersTable).then(getName)
+}
+
+export async function groupUsersByRoles() {
+  return db.select({ name: usersTable.name, role: usersTable.role }).from(usersTable).then(users =>
+    _(users).groupBy("role").mapValues(getName)
+  )
 }
 
 export async function getUserByName(username: string) {

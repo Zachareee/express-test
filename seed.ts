@@ -12,7 +12,7 @@ const user: typeof usersTable.$inferInsert[] = [
   },
   {
     name: "devania",
-    hash: await argon.hash("secretpassword"),
+    hash: await argon.hash("lovescats"),
     role: "USER"
   }
 ];
